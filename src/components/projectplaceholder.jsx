@@ -35,7 +35,7 @@ const projectData = {
   },
   6: {
     title: 'MTR Spices Landing Page',
-    description: 'Increased conversion by streamlining checkout and refining product pages.',
+    description: 'Working on the MTR Foods website was a vibrant and flavorful design challenge quite literally. As part of the creative team, I contributed to designing key landing pages that celebrated MTR’s rich culinary heritage while offering a clean, appetizing user experience. From visually showcasing product ranges to enhancing discoverability with tools like the “Side Dish Finder,” my focus was on making the interface feel lively, trustworthy, and culturally rooted. I helped shape the layout structure, user flow, and visual direction, ensuring that every section felt intuitive and visually appetizing from bold spice imagery to the strategic use of red tones associated with the brand. Designing for a legacy food company meant understanding how emotion, nostalgia, and trust influence user behavior  and translating that into a digital format was both challenging and exciting. I paid extra attention to product hierarchy, CTA clarity, and scroll engagement to ensure users could quickly explore, connect, and convert. This project deepened my appreciation for designing around emotion-driven branding and how small interface choices can elevate the overall experience. It was a delicious blend of tradition and modern UX.',
     link: 'https://www.figma.com/proto/12dmq58aKv9Hvzq8QVN8MQ/Portfolio?page-id=4%3A9&node-id=251-6401&viewport=29%2C174%2C0.05&t=r6CtQgxpEIa7Cumv-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=251%3A6401&show-proto-sidebar=1',
     backgroundImage: '/assets/images/project6bg.jpg',
   },
