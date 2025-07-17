@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Oswald', sans-serif;
+  background-color: #1c1c1c;
+  overflow: hidden;
+}
+
+#root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+/* Navbar */
+#navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.nav-left a {
+  font-weight: bold;
+  font-size: 24px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-right a {
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.nav-right a:hover {
+  background: white;
+  color: black;
+}
+
+/* Enter Button Overlay */
+#enter-overlay {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 15;
+}
+
+#enter-btn {
+  padding: 14px 28px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Oswald', sans-serif;
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#enter-btn:hover {
+  background: white;
+  color: black;
+}
+
+/* Contact Section */
+#contact {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(77, 124, 159, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  max-width: 300px;
+}
+
+#contact h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#contact p {
+  font-size: 14px;
+  margin: 4px 0;
+}
