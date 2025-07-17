@@ -8,7 +8,7 @@ import { useSetAtom, useAtomValue } from 'jotai';
 import { cameraZoomStartedAtom } from '../state/atoms';
 
 import Football from './football';
-import Goal from './Goal';
+import Goal from './goal';
 import { StadiumLights } from './stadiumlights';
 import GoalOverlay from './goaloverlay';
 
