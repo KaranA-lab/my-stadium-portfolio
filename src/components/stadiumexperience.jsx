@@ -106,7 +106,7 @@ export default function StadiumExperience() {
   useEffect(() => {
     crowdAudioRef.current = new Audio('/assets/crowd.mp3');
     crowdAudioRef.current.loop = true;
-    crowdAudioRef.current.volume = 0.12;
+    crowdAudioRef.current.volume = 0.09;
   }, []);
 
   useEffect(() => {
