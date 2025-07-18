@@ -92,12 +92,34 @@ export default function StadiumExperience() {
   const orbitControlsRef = useRef();
   const setZoomStarted = useSetAtom(cameraZoomStartedAtom);
   const zoomStarted = useAtomValue(cameraZoomStartedAtom);
+ useEffect(() => {
+  if (!crowdAudioRef.current) return;
+
+  if (zoomStarted) {
+    crowdAudioRef.current.currentTime = 0;
+    crowdAudioRef.current.play().catch((err) =>
+      console.warn("Crowd audio failed to play:", err)
+    );
+  } else {
+    crowdAudioRef.current.pause();
+    crowdAudioRef.current.currentTime = 0;
+  }
+}, [zoomStarted]);
+
   const [activeGoal, setActiveGoal] = useState(null);
   const netSoundRef = useRef(null);
+  const crowdAudioRef = useRef(null);
 
   useEffect(() => {
     netSoundRef.current = new Audio('/assets/net.mp3');
+    netSoundRef.current.volume = 0.4;
   }, []);
+  useEffect(() => {
+  crowdAudioRef.current = new Audio('/assets/crowd.mp3');
+  crowdAudioRef.current.loop = true;
+  crowdAudioRef.current.volume = 0.09;
+}, []);
+
 
   const handleGoalScore = (i) => {
     setActiveGoal(i);
