@@ -92,21 +92,9 @@ export default function StadiumExperience() {
   const orbitControlsRef = useRef();
   const setZoomStarted = useSetAtom(cameraZoomStartedAtom);
   const zoomStarted = useAtomValue(cameraZoomStartedAtom);
- useEffect(() => {
-  if (!crowdAudioRef.current) return;
-
-  if (zoomStarted) {
-    crowdAudioRef.current.currentTime = 0;
-    crowdAudioRef.current.play().catch((err) =>
-      console.warn("Crowd audio failed to play:", err)
-    );
-  } else {
-    crowdAudioRef.current.pause();
-    crowdAudioRef.current.currentTime = 0;
-  }
-}, [zoomStarted]);
 
   const [activeGoal, setActiveGoal] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
   const netSoundRef = useRef(null);
   const crowdAudioRef = useRef(null);
 
@@ -114,12 +102,34 @@ export default function StadiumExperience() {
     netSoundRef.current = new Audio('/assets/net.mp3');
     netSoundRef.current.volume = 0.4;
   }, []);
-  useEffect(() => {
-  crowdAudioRef.current = new Audio('/assets/crowd.mp3');
-  crowdAudioRef.current.loop = true;
-  crowdAudioRef.current.volume = 0.09;
-}, []);
 
+  useEffect(() => {
+    crowdAudioRef.current = new Audio('/assets/crowd.mp3');
+    crowdAudioRef.current.loop = true;
+    crowdAudioRef.current.volume = 0.12;
+  }, []);
+
+  useEffect(() => {
+    if (!crowdAudioRef.current) return;
+
+    if (zoomStarted) {
+      crowdAudioRef.current.currentTime = 0;
+      crowdAudioRef.current.play().catch((err) =>
+        console.warn("Crowd audio failed to play:", err)
+      );
+    } else {
+      crowdAudioRef.current.pause();
+      crowdAudioRef.current.currentTime = 0;
+    }
+  }, [zoomStarted]);
+
+  useEffect(() => {
+    if (zoomStarted) {
+      setShowInstructions(true);
+      const timer = setTimeout(() => setShowInstructions(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [zoomStarted]);
 
   const handleGoalScore = (i) => {
     setActiveGoal(i);
@@ -163,6 +173,26 @@ export default function StadiumExperience() {
           >
             ENTER
           </button>
+        </div>
+      )}
+
+      {showInstructions && (
+        <div style={{
+          position: 'absolute',
+          top: '2rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          color: 'white',
+          padding: '1rem 2rem',
+          borderRadius: '1rem',
+          zIndex: 20,
+          fontSize: '0.9rem',
+          textAlign: 'center',
+          lineHeight: '1.5',
+        }}>
+          🎮 Use <strong>WASD</strong> to move the ball <br />
+          🖱️ Use <strong>Mouse</strong> to rotate the camera
         </div>
       )}
 
@@ -232,6 +262,7 @@ export default function StadiumExperience() {
     </>
   );
 }
+
 
 
 
