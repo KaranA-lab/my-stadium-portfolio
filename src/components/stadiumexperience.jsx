@@ -171,7 +171,7 @@ export default function StadiumExperience() {
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            ENTER
+            ENTER PORTFOLIO
           </button>
         </div>
       )}

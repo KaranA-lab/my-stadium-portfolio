@@ -51,8 +51,8 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
   useFrame(() => {
     if (!controlsEnabled || !zoomStarted || !ref.current) return;
 
-    const moveX = (keys.current['d'] ? 1 : 0) - (keys.current['a'] ? 1 : 0);
-    const moveZ = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
+    const moveX = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
+    const moveZ = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
 
     if (moveX !== 0 || moveZ !== 0) {
       const impulse = new THREE.Vector3(moveX, 0, moveZ)
