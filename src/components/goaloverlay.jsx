@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const projectData = [
   { id: 1, title: 'Alexander Babu: Ticket Booking Website' },
   { id: 2, title: 'RMKV : Wedding Collection' },
-  { id: 3, title: 'Deepsense Company Website' },
-  { id: 4, title: 'Classmate Notebook: E-commerce Website' },
+  { id: 3, title: 'Classmate Notebook: E-commerce Website' },
+  { id: 4, title: 'Deepsense Company Website' },
   { id: 5, title: 'Naturals Bridal landing page' },
   { id: 6, title: 'MTR Spices Landing Page' },
 ];
