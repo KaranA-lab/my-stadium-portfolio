@@ -95,6 +95,7 @@ export default function StadiumExperience() {
 
   const [activeGoal, setActiveGoal] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showGoalHint, setShowGoalHint] = useState(false);
   const netSoundRef = useRef(null);
   const crowdAudioRef = useRef(null);
 
@@ -111,6 +112,7 @@ export default function StadiumExperience() {
 
   useEffect(() => {
     if (!crowdAudioRef.current) return;
+
     if (zoomStarted) {
       crowdAudioRef.current.currentTime = 0;
       crowdAudioRef.current.play().catch((err) =>
@@ -125,22 +127,18 @@ export default function StadiumExperience() {
   useEffect(() => {
     if (zoomStarted) {
       setShowInstructions(true);
-      const timer = setTimeout(() => setShowInstructions(false), 5000);
+      setShowGoalHint(false);
+      const timer = setTimeout(() => {
+        setShowInstructions(false);
+        setShowGoalHint(true);
+      }, 5000);
       return () => clearTimeout(timer);
-    }
-  }, [zoomStarted]);
-
-  // 🔧 Fix mobile render bug by forcing a resize event
-  useEffect(() => {
-    if (zoomStarted) {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 200);
     }
   }, [zoomStarted]);
 
   const handleGoalScore = (i) => {
     setActiveGoal(i);
+    setShowGoalHint(false);
     if (netSoundRef.current) {
       netSoundRef.current.currentTime = 0;
       netSoundRef.current.play();
@@ -204,6 +202,39 @@ export default function StadiumExperience() {
         </div>
       )}
 
+     {showGoalHint && (
+  <div style={{
+    position: 'absolute',
+    top: '2rem',
+    right: '2rem',
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    color: 'white',
+    padding: '1rem 1.5rem',
+    borderRadius: '1.2rem',
+    zIndex: 20,
+    fontSize: '1.05rem',
+    textAlign: 'center',
+    maxWidth: '280px',
+    fontWeight: '600',
+    border: '1.5px solid white',
+    boxShadow: '0 0 8px rgba(255,255,255,0.2)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '0.6rem'
+  }}>
+    <div style={{
+      fontSize: '1.5rem',
+      animation: 'bounce 1.2s infinite'
+    }}>
+      ⚽
+    </div>
+    <span>Score a goal to reveal a project!</span>
+  </div>
+)}
+
+
+
       {activeGoal !== null && (
         <GoalOverlay
           goalIndex={activeGoal}
@@ -214,15 +245,7 @@ export default function StadiumExperience() {
       <Canvas
         shadows
         camera={{ position: TOP_VIEW_POSITION.toArray(), fov: 45 }}
-        style={{
-          width: '100vw',
-          height: '100vh',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          zIndex: 0,
-          background: '#101010'
-        }}
+        style={{ width: '100vw', height: '100vh', background: '#101010' }}
         gl={{
           physicallyCorrectLights: true,
           toneMappingExposure: 0.18,
