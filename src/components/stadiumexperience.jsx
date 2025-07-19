@@ -14,7 +14,7 @@ import GoalOverlay from './goaloverlay';
 
 const CAMERA_OFFSET = new THREE.Vector3(0.4, 0.3, 0);
 const TOP_VIEW_POSITION = new THREE.Vector3(0, 25, 25);
-const CAMERA_TRANSITION_SPEED = 0.05;
+const CAMERA_TRANSITION_SPEED = 0.02;
 
 const StadiumWrapper = React.forwardRef((props, ref) => {
   const { scene } = useGLTF('/assets/stadium.glb');
@@ -34,6 +34,7 @@ const StadiumWrapper = React.forwardRef((props, ref) => {
 
   scene.scale.set(0.5, 0.5, 0.5);
   scene.position.set(0, 7, 0);
+  scene.rotation.y = Math.PI;
 
   return <primitive object={scene} />;
 });
@@ -77,7 +78,7 @@ function CameraController({ target, orbitControlsRef }) {
       orbitControlsRef.current.update();
     } else {
       camera.position.lerp(TOP_VIEW_POSITION, CAMERA_TRANSITION_SPEED);
-      orbitControlsRef.current.target.lerp(new THREE.Vector3(0, 5, 0), CAMERA_TRANSITION_SPEED);
+      orbitControlsRef.current.target.lerp(new THREE.Vector3(0, 8, 0), CAMERA_TRANSITION_SPEED);
       orbitControlsRef.current.update();
     }
   });
@@ -96,8 +97,13 @@ export default function StadiumExperience() {
   const [activeGoal, setActiveGoal] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showGoalHint, setShowGoalHint] = useState(false);
+  const [textInView, setTextInView] = useState(false);
   const netSoundRef = useRef(null);
   const crowdAudioRef = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => setTextInView(true), 300);
+  }, []);
 
   useEffect(() => {
     netSoundRef.current = new Audio('/assets/net.mp3');
@@ -112,7 +118,6 @@ export default function StadiumExperience() {
 
   useEffect(() => {
     if (!crowdAudioRef.current) return;
-
     if (zoomStarted) {
       crowdAudioRef.current.currentTime = 0;
       crowdAudioRef.current.play().catch((err) =>
@@ -148,6 +153,32 @@ export default function StadiumExperience() {
   return (
     <>
       {!zoomStarted && (
+        <h1
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            transform: zoomStarted
+              ? 'translate(-50%, -200%)'
+              : textInView
+              ? 'translate(-50%, -50%)'
+              : 'translate(-50%, -100%)',
+            fontSize: '5rem',
+            color: 'white',
+            fontWeight: '900',
+            zIndex: 5,
+            fontFamily: 'Oswald, sans-serif',
+            textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+            transition: 'transform 1.3s ease, opacity 1.3s ease',
+            opacity: zoomStarted ? 0 : textInView ? 1 : 0,
+            pointerEvents: 'none',
+          }}
+        >
+          WELCOME TO MY PORTFOLIO
+        </h1>
+      )}
+
+      {!zoomStarted && (
         <div style={{
           height: '100vh',
           width: '100vw',
@@ -177,7 +208,7 @@ export default function StadiumExperience() {
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            ENTER PORTFOLIO
+            ENTER
           </button>
         </div>
       )}
@@ -202,38 +233,32 @@ export default function StadiumExperience() {
         </div>
       )}
 
-     {showGoalHint && (
-  <div style={{
-    position: 'absolute',
-    top: '2rem',
-    right: '2rem',
-    backgroundColor: 'rgba(0,0,0,0.85)',
-    color: 'white',
-    padding: '1rem 1.5rem',
-    borderRadius: '1.2rem',
-    zIndex: 20,
-    fontSize: '1.05rem',
-    textAlign: 'center',
-    maxWidth: '280px',
-    fontWeight: '600',
-    border: '1.5px solid white',
-    boxShadow: '0 0 8px rgba(255,255,255,0.2)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '0.6rem'
-  }}>
-    <div style={{
-      fontSize: '1.5rem',
-      animation: 'bounce 1.2s infinite'
-    }}>
-      ⚽
-    </div>
-    <span>Score a goal to reveal a project!</span>
-  </div>
-)}
-
-
+      {showGoalHint && (
+        <div style={{
+          position: 'absolute',
+          top: '2rem',
+          right: '2rem',
+          backgroundColor: 'rgba(0,0,0,0.85)',
+          color: 'white',
+          padding: '0.7rem 1rem',
+          borderRadius: '1rem',
+          zIndex: 20,
+          fontSize: '0.95rem',
+          fontWeight: '500',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+          border: '1.5px solid white',
+          boxShadow: '0 0 6px rgba(255,255,255,0.1)',
+          maxWidth: '300px'
+        }}>
+          <span style={{
+            fontSize: '1.3rem',
+            animation: 'bounce 1.3s infinite'
+          }}>⚽</span>
+          <span>Score a goal to reveal a project!</span>
+        </div>
+      )}
 
       {activeGoal !== null && (
         <GoalOverlay
@@ -301,6 +326,7 @@ export default function StadiumExperience() {
     </>
   );
 }
+
 
 
 
