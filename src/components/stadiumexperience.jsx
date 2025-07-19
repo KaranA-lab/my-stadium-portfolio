@@ -153,29 +153,32 @@ export default function StadiumExperience() {
   return (
     <>
       {!zoomStarted && (
-        <h1
-          style={{
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            transform: zoomStarted
-              ? 'translate(-50%, -200%)'
-              : textInView
-              ? 'translate(-50%, -50%)'
-              : 'translate(-50%, -100%)',
-            fontSize: '5rem',
-            color: 'white',
-            fontWeight: '900',
-            zIndex: 5,
-            fontFamily: 'Oswald, sans-serif',
-            textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-            transition: 'transform 1.3s ease, opacity 1.3s ease',
-            opacity: zoomStarted ? 0 : textInView ? 1 : 0,
-            pointerEvents: 'none',
-          }}
-        >
-          WELCOME TO MY PORTFOLIO
-        </h1>
+       <h1
+  style={{
+    position: 'absolute',
+    top: '10%',
+    left: '50%',
+    transform: zoomStarted
+      ? 'translate(-50%, -200%)'
+      : textInView
+      ? 'translate(-50%, -50%)'
+      : 'translate(-50%, -100%)',
+    fontSize: '5rem',
+    color: 'white',
+    fontWeight: '800',
+    zIndex: 5,
+    fontFamily: 'Oswald, sans-serif',
+    textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+    transition: 'transform 1.3s ease, opacity 1.3s ease',
+    opacity: zoomStarted ? 0 : textInView ? 1 : 0,
+    pointerEvents: 'none',
+    textAlign: 'center',
+    width: '100%',
+  }}
+>
+  WELCOME TO MY PORTFOLIO
+</h1>
+
       )}
 
       {!zoomStarted && (
@@ -298,7 +301,7 @@ export default function StadiumExperience() {
               <Goal
                 key={i}
                 ref={goalRefs.current[i]}
-                position={[[-5.8, 7.45, 0.23], [-3.1, 7.45, -3.3], [5.95, 7.45, 0.23], [3.1, 7.45, -3.3], [3, 7.45, 3.76], [-3.1, 7.45, 3.76]][i]}
+                position={[[-5.9, 7.45, -0.2], [-3.1, 7.45, -3.7], [5.78, 7.45, -0.2], [3.1, 7.45, -3.7], [3, 7.45, 3.23], [-3.1, 7.45, 3.23]][i]}
                 rotation={[[0, 1.58, 0], [0, 0, 0], [0, -Math.PI / 2, 0], [0, 0, 0], [0, -3.1, 0], [0, -3.1, 0]][i]}
                 netDistanceBehind={0.5}
                 onGoalScored={() => handleGoalScore(i)}

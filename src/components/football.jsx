@@ -19,7 +19,7 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
 
   const [physicsRef, api] = useSphere(() => ({
     mass: 1,
-    position: [0.12, 13, 0.22],
+    position: [-0.01, 13, -0.03],
     args: [0.35],
     linearDamping: 0.95,
     angularDamping: 0.95,
