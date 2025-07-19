@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, forwardRef, useState } from 'react';
+// src/components/football.jsx
+import React, { useEffect, useRef, forwardRef } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useSphere } from '@react-three/cannon';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useAtomValue } from 'jotai';
 import { cameraZoomStartedAtom } from '../state/atoms';
-
-import { Joystick } from 'react-joystick-component';
 
 const IMPULSE_FORCE = 0.5;
 const MAX_SPEED = 2;
@@ -17,8 +16,6 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
   const velocityRef = useRef([0, 0, 0]);
 
   const zoomStarted = useAtomValue(cameraZoomStartedAtom);
-  const [joystickDirection, setJoystickDirection] = useState({ x: 0, z: 0 });
-  const [isMobile, setIsMobile] = useState(false);
 
   const [physicsRef, api] = useSphere(() => ({
     mass: 1,
@@ -26,12 +23,8 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
     args: [0.35],
     linearDamping: 0.95,
     angularDamping: 0.95,
-    userData: { id: 'football' },
+    userData: { id: 'football' } // 👈 Important: ID to detect collisions
   }));
-
-  useEffect(() => {
-    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-  }, []);
 
   useEffect(() => {
     if (ref && physicsRef.current) {
@@ -58,16 +51,8 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
   useFrame(() => {
     if (!controlsEnabled || !zoomStarted || !ref.current) return;
 
-    let moveX = 0;
-    let moveZ = 0;
-
-    if (isMobile) {
-      moveX = joystickDirection.x;
-      moveZ = joystickDirection.z;
-    } else {
-      moveX = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
-      moveZ = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
-    }
+    const moveX = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
+    const moveZ = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
 
     if (moveX !== 0 || moveZ !== 0) {
       const impulse = new THREE.Vector3(moveX, 0, moveZ)
@@ -91,39 +76,15 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
         pos.x < box.min.x || pos.x > box.max.x ||
         pos.z < box.min.z || pos.z > box.max.z
       ) {
-        api.velocity.set(0, 0, 0);
+        api.velocity.set(0, 0, 0); // Stop the ball if out of pitch bounds
       }
     }
   });
 
-  return (
-    <>
-      <primitive ref={physicsRef} object={scene} scale={0.3} />
-
-      {isMobile && controlsEnabled && zoomStarted && (
-        <div style={{ position: 'absolute', bottom: '5%', left: '5%', zIndex: 100 }}>
-          <Joystick
-            size={100}
-            baseColor="rgba(255,255,255,0.1)"
-            stickColor="white"
-            throttle={100}
-            move={(e) => {
-              const x = e.x * 1.5;
-              const z = -e.y * 1.5;
-              setJoystickDirection({ x, z });
-            }}
-            stop={() => {
-              setJoystickDirection({ x: 0, z: 0 });
-            }}
-          />
-        </div>
-      )}
-    </>
-  );
+  return <primitive ref={physicsRef} object={scene} scale={0.3} />;
 });
 
 export default Football;
-
 
 
 

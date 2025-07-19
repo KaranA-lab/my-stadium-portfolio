@@ -111,7 +111,6 @@ export default function StadiumExperience() {
 
   useEffect(() => {
     if (!crowdAudioRef.current) return;
-
     if (zoomStarted) {
       crowdAudioRef.current.currentTime = 0;
       crowdAudioRef.current.play().catch((err) =>
@@ -128,6 +127,15 @@ export default function StadiumExperience() {
       setShowInstructions(true);
       const timer = setTimeout(() => setShowInstructions(false), 5000);
       return () => clearTimeout(timer);
+    }
+  }, [zoomStarted]);
+
+  // 🔧 Fix mobile render bug by forcing a resize event
+  useEffect(() => {
+    if (zoomStarted) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 200);
     }
   }, [zoomStarted]);
 
@@ -206,7 +214,15 @@ export default function StadiumExperience() {
       <Canvas
         shadows
         camera={{ position: TOP_VIEW_POSITION.toArray(), fov: 45 }}
-        style={{ width: '100vw', height: '100vh', background: '#101010' }}
+        style={{
+          width: '100vw',
+          height: '100vh',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 0,
+          background: '#101010'
+        }}
         gl={{
           physicallyCorrectLights: true,
           toneMappingExposure: 0.18,
@@ -262,6 +278,7 @@ export default function StadiumExperience() {
     </>
   );
 }
+
 
 
 
