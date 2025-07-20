@@ -115,3 +115,97 @@ canvas {
   font-size: 14px;
   margin: 4px 0;
 }
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem !important;
+    top: 13% !important;
+  }
+
+  #enter-btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+
+  #navbar {
+    padding: 10px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-left a {
+    font-size: 20px;
+  }
+
+  .nav-right a {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  #contact {
+    max-width: 90%;
+    left: 10px;
+    bottom: 10px;
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  #contact h1 {
+    font-size: 18px;
+  }
+
+  #contact p {
+    font-size: 12px;
+  }
+
+  #enter-overlay {
+    bottom: 20px;
+  }
+}
+
+/* -------------------- */
+/* Responsive Typography & Buttons */
+/* -------------------- */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3.2rem !important;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  #enter-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  #navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 20px;
+  }
+
+  .nav-left a {
+    font-size: 20px;
+  }
+
+  .nav-right a {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
+
+  #contact {
+    max-width: 90vw;
+    padding: 15px;
+    font-size: 13px;
+  }
+
+  #contact h1 {
+    font-size: 20px;
+  }
+
+  #contact p {
+    font-size: 13px;
+  }
+}

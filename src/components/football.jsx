@@ -10,11 +10,10 @@ import { cameraZoomStartedAtom } from '../state/atoms';
 const IMPULSE_FORCE = 0.5;
 const MAX_SPEED = 2;
 
-const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
+const Football = forwardRef(({ controlsEnabled, boundsRef, joystickInput }, ref) => {
   const { scene } = useGLTF('/assets/football.glb');
   const keys = useRef({});
   const velocityRef = useRef([0, 0, 0]);
-
   const zoomStarted = useAtomValue(cameraZoomStartedAtom);
 
   const [physicsRef, api] = useSphere(() => ({
@@ -23,7 +22,7 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
     args: [0.35],
     linearDamping: 0.95,
     angularDamping: 0.95,
-    userData: { id: 'football' } // 👈 Important: ID to detect collisions
+    userData: { id: 'football' },
   }));
 
   useEffect(() => {
@@ -51,11 +50,20 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
   useFrame(() => {
     if (!controlsEnabled || !zoomStarted || !ref.current) return;
 
+    // WASD input
     const moveX = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
     const moveZ = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
 
-    if (moveX !== 0 || moveZ !== 0) {
-      const impulse = new THREE.Vector3(moveX, 0, moveZ)
+    // Joystick input (if available)
+    const joystickX = joystickInput?.x || 0;
+    const joystickY = joystickInput?.y || 0;
+
+    // Combine inputs: WASD + joystick
+    const totalX = moveX + joystickY; // Invert Y from joystick for forward/back
+    const totalZ = moveZ + joystickX;
+
+    if (totalX !== 0 || totalZ !== 0) {
+      const impulse = new THREE.Vector3(totalX, 0, totalZ)
         .normalize()
         .multiplyScalar(IMPULSE_FORCE);
       api.applyImpulse([impulse.x, 0, impulse.z], [0, 0, 0]);
@@ -85,6 +93,7 @@ const Football = forwardRef(({ controlsEnabled, boundsRef }, ref) => {
 });
 
 export default Football;
+
 
 
 

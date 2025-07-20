@@ -1,4 +1,3 @@
-// src/components/stadiumexperience.jsx
 import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
@@ -11,6 +10,7 @@ import Football from './football';
 import Goal from './goal';
 import { StadiumLights } from './stadiumlights';
 import GoalOverlay from './goaloverlay';
+import MobileJoystick from './mobilejoystick'; // ✅ Add joystick
 
 const CAMERA_OFFSET = new THREE.Vector3(0.4, 0.3, 0);
 const TOP_VIEW_POSITION = new THREE.Vector3(0, 25, 25);
@@ -98,10 +98,12 @@ export default function StadiumExperience() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showGoalHint, setShowGoalHint] = useState(false);
   const [textInView, setTextInView] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // ✅ Detect mobile
   const netSoundRef = useRef(null);
   const crowdAudioRef = useRef(null);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
     setTimeout(() => setTextInView(true), 300);
   }, []);
 
@@ -150,35 +152,48 @@ export default function StadiumExperience() {
     }
   };
 
+  const handleJoystickMove = (dir) => {
+    if (ballRef.current?.api?.applyImpulse) {
+      const impulse = {
+        forward: [0, 0, -0.5],
+        backward: [0, 0, 0.5],
+        left: [-0.5, 0, 0],
+        right: [0.5, 0, 0],
+      }[dir];
+      if (impulse) {
+        ballRef.current.api.applyImpulse(impulse, [0, 0, 0]);
+      }
+    }
+  };
+
   return (
     <>
       {!zoomStarted && (
-       <h1
-  style={{
-    position: 'absolute',
-    top: '10%',
-    left: '50%',
-    transform: zoomStarted
-      ? 'translate(-50%, -200%)'
-      : textInView
-      ? 'translate(-50%, -50%)'
-      : 'translate(-50%, -100%)',
-    fontSize: '5rem',
-    color: 'white',
-    fontWeight: '800',
-    zIndex: 5,
-    fontFamily: 'Oswald, sans-serif',
-    textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-    transition: 'transform 1.3s ease, opacity 1.3s ease',
-    opacity: zoomStarted ? 0 : textInView ? 1 : 0,
-    pointerEvents: 'none',
-    textAlign: 'center',
-    width: '100%',
-  }}
->
-  WELCOME TO MY PORTFOLIO
-</h1>
-
+        <h1
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            transform: zoomStarted
+              ? 'translate(-50%, -200%)'
+              : textInView
+              ? 'translate(-50%, -50%)'
+              : 'translate(-50%, -100%)',
+            fontSize: '5rem',
+            color: 'white',
+            fontWeight: '800',
+            zIndex: 5,
+            fontFamily: 'Oswald, sans-serif',
+            textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+            transition: 'transform 1.3s ease, opacity 1.3s ease',
+            opacity: zoomStarted ? 0 : textInView ? 1 : 0,
+            pointerEvents: 'none',
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >
+          WELCOME TO MY PORTFOLIO
+        </h1>
       )}
 
       {!zoomStarted && (
@@ -263,6 +278,10 @@ export default function StadiumExperience() {
         </div>
       )}
 
+      {isMobile && zoomStarted && (
+        <MobileJoystick onMove={handleJoystickMove} />
+      )}
+
       {activeGoal !== null && (
         <GoalOverlay
           goalIndex={activeGoal}
@@ -274,13 +293,9 @@ export default function StadiumExperience() {
         shadows
         camera={{ position: TOP_VIEW_POSITION.toArray(), fov: 45 }}
         style={{ width: '100vw', height: '100vh', background: '#101010' }}
-        gl={{
-          physicallyCorrectLights: true,
-          toneMappingExposure: 0.18,
-        }}
+        gl={{ physicallyCorrectLights: true, toneMappingExposure: 0.18 }}
       >
         <fog attach="fog" args={['#12000c', 30, 90]} />
-
         <React.Suspense fallback={null}>
           <ambientLight intensity={0.01} />
           <directionalLight
@@ -309,16 +324,12 @@ export default function StadiumExperience() {
             ))}
           </Physics>
 
-          <CameraController
-            target={ballRef}
-            orbitControlsRef={orbitControlsRef}
-          />
-
+          <CameraController target={ballRef} orbitControlsRef={orbitControlsRef} />
           <OrbitControls
             ref={orbitControlsRef}
             enabled={zoomStarted}
             enableZoom={false}
-            enablePan={false}
+            enablePan={true}
             minPolarAngle={Math.PI / 3.5}
             maxPolarAngle={Math.PI / 2.1}
             minDistance={10}
@@ -329,6 +340,8 @@ export default function StadiumExperience() {
     </>
   );
 }
+
+
 
 
 
