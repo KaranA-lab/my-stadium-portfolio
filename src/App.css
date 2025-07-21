@@ -209,3 +209,47 @@ canvas {
     font-size: 13px;
   }
 }
+
+/* === CONTACT PAGE STYLES === */
+
+/* Default desktop layout (text and image side-by-side) */
+.contact-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh; /* Full screen */
+  overflow-y: auto; /* Enable vertical scroll if needed */
+  padding: 2rem;
+}
+
+/* Image section */
+.contact-image {
+  flex: 1;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Text section */
+.contact-text {
+  flex: 1;
+  padding: 2rem;
+  color: white;
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 768px) {
+  .contact-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .contact-image,
+  .contact-text {
+    width: 100%;
+    height: auto;
+  }
+
+  .contact-text {
+    padding: 1rem;
+    text-align: center;
+  }
+}
