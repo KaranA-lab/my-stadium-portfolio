@@ -50,20 +50,20 @@ const Football = forwardRef(({ controlsEnabled, boundsRef, joystickInput }, ref)
   useFrame(() => {
     if (!controlsEnabled || !zoomStarted || !ref.current) return;
 
-    // WASD input
-    const moveX = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
-    const moveZ = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
+    let moveX = 0;
+    let moveZ = 0;
 
-    // Joystick input (if available)
-    const joystickX = joystickInput?.x || 0;
-    const joystickY = joystickInput?.y || 0;
+    // Prefer joystick input on mobile
+    if (joystickInput) {
+      moveX = joystickInput.y;     // Forward/backward (Y axis mapped to Z movement)
+      moveZ = -joystickInput.x;    // Left/right (X axis mapped to X movement)
+    } else {
+      moveX = (keys.current['a'] ? 1 : 0) - (keys.current['d'] ? 1 : 0);
+      moveZ = (keys.current['s'] ? 1 : 0) - (keys.current['w'] ? 1 : 0);
+    }
 
-    // Combine inputs: WASD + joystick
-    const totalX = moveX + joystickY; // Invert Y from joystick for forward/back
-    const totalZ = moveZ + joystickX;
-
-    if (totalX !== 0 || totalZ !== 0) {
-      const impulse = new THREE.Vector3(totalX, 0, totalZ)
+    if (moveX !== 0 || moveZ !== 0) {
+      const impulse = new THREE.Vector3(moveZ, 0, moveX)
         .normalize()
         .multiplyScalar(IMPULSE_FORCE);
       api.applyImpulse([impulse.x, 0, impulse.z], [0, 0, 0]);
@@ -84,7 +84,7 @@ const Football = forwardRef(({ controlsEnabled, boundsRef, joystickInput }, ref)
         pos.x < box.min.x || pos.x > box.max.x ||
         pos.z < box.min.z || pos.z > box.max.z
       ) {
-        api.velocity.set(0, 0, 0); // Stop the ball if out of pitch bounds
+        api.velocity.set(0, 0, 0); // Stop if out of bounds
       }
     }
   });
@@ -93,6 +93,7 @@ const Football = forwardRef(({ controlsEnabled, boundsRef, joystickInput }, ref)
 });
 
 export default Football;
+
 
 
 

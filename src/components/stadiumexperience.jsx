@@ -10,7 +10,7 @@ import Football from './football';
 import Goal from './goal';
 import { StadiumLights } from './stadiumlights';
 import GoalOverlay from './goaloverlay';
-import MobileJoystick from './mobilejoystick'; // ✅ Add joystick
+import MobileJoystick from './mobilejoystick';
 
 const CAMERA_OFFSET = new THREE.Vector3(0.4, 0.3, 0);
 const TOP_VIEW_POSITION = new THREE.Vector3(0, 25, 25);
@@ -75,12 +75,11 @@ function CameraController({ target, orbitControlsRef }) {
     if (zoomStarted) {
       camera.position.lerp(followTarget, CAMERA_TRANSITION_SPEED);
       orbitControlsRef.current.target.lerp(targetPos, CAMERA_TRANSITION_SPEED);
-      orbitControlsRef.current.update();
     } else {
       camera.position.lerp(TOP_VIEW_POSITION, CAMERA_TRANSITION_SPEED);
       orbitControlsRef.current.target.lerp(new THREE.Vector3(0, 8, 0), CAMERA_TRANSITION_SPEED);
-      orbitControlsRef.current.update();
     }
+    orbitControlsRef.current.update();
   });
 
   return null;
@@ -98,7 +97,9 @@ export default function StadiumExperience() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [showGoalHint, setShowGoalHint] = useState(false);
   const [textInView, setTextInView] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // ✅ Detect mobile
+  const [isMobile, setIsMobile] = useState(false);
+  const [joystickState, setJoystickState] = useState({ x: 0, y: 0 });
+
   const netSoundRef = useRef(null);
   const crowdAudioRef = useRef(null);
 
@@ -152,18 +153,8 @@ export default function StadiumExperience() {
     }
   };
 
-  const handleJoystickMove = (dir) => {
-    if (ballRef.current?.api?.applyImpulse) {
-      const impulse = {
-        forward: [0, 0, -0.5],
-        backward: [0, 0, 0.5],
-        left: [-0.5, 0, 0],
-        right: [0.5, 0, 0],
-      }[dir];
-      if (impulse) {
-        ballRef.current.api.applyImpulse(impulse, [0, 0, 0]);
-      }
-    }
+  const handleJoystickMove = ({ x, y }) => {
+    setJoystickState({ x, y });
   };
 
   return (
@@ -311,7 +302,12 @@ export default function StadiumExperience() {
             <StadiumWrapper ref={boundsRef} />
             <StadiumLights boundsRef={boundsRef} />
             <GroundPlane />
-            <Football ref={ballRef} controlsEnabled={zoomStarted} boundsRef={boundsRef} />
+            <Football
+              ref={ballRef}
+              controlsEnabled={zoomStarted}
+              boundsRef={boundsRef}
+              joystickInput={isMobile ? joystickState : null}
+            />
             {[...Array(6)].map((_, i) => (
               <Goal
                 key={i}
@@ -340,6 +336,7 @@ export default function StadiumExperience() {
     </>
   );
 }
+
 
 
 
