@@ -65,9 +65,9 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div style={{ marginTop: '2rem', fontSize: '1rem', lineHeight: 2 }}>
             <div>
-              📞 <strong>+44 7393066821</strong>
+              📞 <strong>+91 9677395335</strong>
             </div>
-            <div>📍 <strong>London, United Kingdom</strong></div>
+            <div>📍 <strong>Chennai, Tamil Nadu</strong></div>
             <div>🌐 <strong>karananilkumar.com</strong></div>
           </div>
         </div>
