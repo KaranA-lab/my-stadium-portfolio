@@ -56,7 +56,7 @@ export default function ContactPage() {
               cursor: 'pointer',
             }}
             onClick={() => {
-              window.open('/assets/Resume_Karan_Anilkumar.pdf', '_blank');
+              window.open('/resume.pdf', '_blank');
             }}
           >
             Download Resume
